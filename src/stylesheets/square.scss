@@ -2,25 +2,20 @@
   border: 1px solid gray;
   float: left;
   padding: 0;
-  width: 4em;
-  height: 4em;
+  width: 6em;
+  height: 6em;
   margin: -1px;
 
   text-align: center;
   background: lightgray;
   span{
-    font-size: 3.5em;
+    font-size: 5em;
+    font-weight: bold
   }
   &:focus {
     outline: none;
-  } 
-  // button{
-  //   width: 100%;
-  //   height: 100%;
-  // }
-
+  }
 }
-
 
 .winner {
   background: green;
@@ -28,4 +23,12 @@
 
 .after-game{
   background: darkgray;
+}
+
+.x{
+  color: blue;
+}
+
+.o{
+  color: orange;
 }
