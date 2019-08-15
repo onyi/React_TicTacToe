@@ -1,0 +1,17 @@
+.game-board-container {
+  display: flex;
+  flex-direction: column;
+  border: 3px solid black;
+
+}
+
+.game-board {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.game-board-turn{
+  margin: 0.5em;
+}
