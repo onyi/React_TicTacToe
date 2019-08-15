@@ -31,19 +31,31 @@ class Game extends React.Component {
     super();
     this.state = {
       histories: DEFAULT.histories,
-      step: DEFAULT.step ,
-      xIsNext: DEFAULT.xIsNext ,
-      statusText: DEFAULT.statusText ,
+      step: DEFAULT.step,
+      xIsNext: DEFAULT.xIsNext,
+      statusText: DEFAULT.statusText,
       gameState: DEFAULT.gameState
-
-    }
+    };
+    this.reset = this.reset.bind(this);
+    this.reset();
     this.placeMove = this.placeMove.bind(this);
     this.startGame = this.startGame.bind(this);
 
   }
+
+  reset(){
+    this.setState({
+      histories: DEFAULT.histories,
+      step: DEFAULT.step,
+      xIsNext: DEFAULT.xIsNext,
+      statusText: DEFAULT.statusText,
+      gameState: DEFAULT.gameState
+    })
+  }
   
 
   startGame(){
+    this.reset();
     this.setState({
       gameState: 1
     })
