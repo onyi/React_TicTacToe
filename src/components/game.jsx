@@ -2,8 +2,6 @@ import React from 'react';
 
 import Board from './board';
 
-import merge from 'lodash'
-
 const WINNING_COMBO = [
   [0,1,2],
   [3,4,5],
@@ -33,13 +31,16 @@ class Game extends React.Component {
       histories: DEFAULT.histories,
       step: DEFAULT.step,
       xIsNext: DEFAULT.xIsNext,
-      statusText: DEFAULT.statusText,
-      gameState: DEFAULT.gameState
+      statusText: '',
+      gameState: DEFAULT.gameState,
+      winningCombo: []
     };
     this.reset = this.reset.bind(this);
     this.reset();
     this.placeMove = this.placeMove.bind(this);
     this.startGame = this.startGame.bind(this);
+    this.getNextShape = this.getNextShape.bind(this);
+    this.getCurrentShape = this.getCurrentShape.bind(this);
 
   }
 
@@ -49,7 +50,8 @@ class Game extends React.Component {
       step: DEFAULT.step,
       xIsNext: DEFAULT.xIsNext,
       statusText: DEFAULT.statusText,
-      gameState: DEFAULT.gameState
+      gameState: DEFAULT.gameState,
+      winningCombo: []
     })
   }
   
@@ -64,9 +66,9 @@ class Game extends React.Component {
   placeMove(pos){
     if(this.state.gameState === 1){
       if (!this.state.histories[this.state.step][pos]){
-        console.log(`Square is empty, valid move`);
+        // console.log(`Square is empty, valid move`);
         let newArr = Array.from(this.state.histories[this.state.step]);
-        let shape = this.state.xIsNext ? 'X' : 'O';
+        let shape = this.getCurrentShape();
         newArr[pos] = shape;
         let newStep = this.state.step + 1;
         let newHistories = this.state.histories;
@@ -74,15 +76,24 @@ class Game extends React.Component {
         this.setState({
           xIsNext: !this.state.xIsNext,
           histories: newHistories,
-          step: newStep
+          step: newStep,
+          statusText: `Current Player Turn: ${this.getNextShape()}`
         });
         this.checkWinner(shape, newArr);
   
       }else{
-        console.log(`Square contains value, Invalid move!`);
+        // console.log(`Square contains value, Invalid move!`);
   
       }
     }
+  }
+
+  getNextShape(){
+    return this.state.xIsNext ? 'O' : 'X';
+  }
+
+  getCurrentShape(){
+    return this.state.xIsNext ? 'X' : 'O';
   }
 
   checkWinner(shape, moves){
@@ -92,7 +103,7 @@ class Game extends React.Component {
       //Nobody wins
       this.setState({
         statusText: `Nobody wins! It is a tie!`,
-        gameState: 0
+        gameState: 2
 
       })
     }else{
@@ -103,34 +114,45 @@ class Game extends React.Component {
       for (let i = 0; i < WINNING_COMBO.length; i++ ){
         let combo = WINNING_COMBO[i];
         const [ a,b,c ] = combo;
-        console.log(`${a} ${b} ${c}`);
+        // console.log(`${a} ${b} ${c}`);
         if (moveIndices.includes(a) && moveIndices.includes(b) && moveIndices.includes(c)){
           this.setState({
             statusText: `Player with ${shape} shape won the game!!!`,
-            gameState: 0
+            gameState: 2,
+            winningCombo: [a,b,c]
           })
+          this.displayWinningCombo(a, b, c);
           return;
         }
       }
 
     }
-    this.setState({
-      statusText: `Current Player Turn: ${shape}`
-    })
+  }
 
+  componentDidUpdate(){
+    if (this.state.gameState === 2 && this.state.winningCombo.length !== 0){
+      const [a, b, c] = this.state.winningCombo;
+      this.displayWinningCombo(a,b,c);
+    }
+  }
+
+  displayWinningCombo(a,b,c){
+    document.getElementById(`square-${a}`).classList.add("winner");
+    document.getElementById(`square-${b}`).classList.add("winner");
+    document.getElementById(`square-${c}`).classList.add("winner");
   }
 
   render(){
-    console.log(`Histories: ${JSON.stringify(this.state.histories)}`)
+    // console.log(`Histories: ${JSON.stringify(this.state.histories)}`)
     let squares = this.state.histories[this.state.step];
-    const { step, xIsNext, statusText, gameState} = this.state;
-    console.log(`Square: ${squares}, step: ${step}`)
+    const { step, xIsNext, statusText, gameState } = this.state;
+    // console.log(`Square: ${squares}, step: ${step}`)
     return(
       <div className="game-container">
         <h1>React Tic Tac Toe</h1>
         <h3>{statusText}</h3>
-        <Board placeMove={this.placeMove} squares={squares} currentPlayer={xIsNext ? 'X' : 'O'}/>
-        {gameState === 0 ? <button onClick={this.startGame}>Start Game</button> : <button onClick={this.startGame}>Restart</button> }
+        <Board placeMove={this.placeMove} squares={squares} currentPlayer={xIsNext ? 'X' : 'O'} />
+        <button className="game-button" onClick={this.startGame}>{gameState === 0 ? "Start Game" : "Restart"}</button>
       </div>
     )
   }
