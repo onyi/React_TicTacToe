@@ -152,7 +152,7 @@ class Game extends React.Component {
         <h1>React Tic Tac Toe</h1>
         <h3>{statusText}</h3>
         <Board placeMove={this.placeMove} squares={squares} currentPlayer={xIsNext ? 'X' : 'O'} />
-        <button className="game-button" onClick={this.startGame}>{gameState === 0 ? "Start Game" : "Restart"}</button>
+        <button className="game__button" onClick={this.startGame}>{gameState === 0 ? "Start Game" : "Restart"}</button>
       </div>
     )
   }
